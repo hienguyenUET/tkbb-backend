@@ -9,6 +9,11 @@
         "host": "",
         "port": ""
     },
+    "redis": {
+        "password": "",
+        "host": "",
+        "port": 6379
+    },
     "admin": {
         "username": "",
         "hashPassword": ""

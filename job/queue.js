@@ -1,11 +1,12 @@
 const Queue = require('bull')
 const { setQueues, BullAdapter } = require('bull-board')
+const { host, port, password } = require('config').get('redis')
 
 const gsCrawlQueue = new Queue('crawlGS', {
     redis: {
-        host: '127.0.0.1',
-        port: 6379,
-        password: 'ytivohs'
+        host,
+        port,
+        password
     }
 })
 
