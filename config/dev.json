@@ -1,0 +1,17 @@
+{
+    "env": "",
+    "port": 3000,
+    "mongo_uri": "",
+    "database": {
+        "name": "",
+        "user": "",
+        "password": "",
+        "host": "",
+        "port": ""
+    },
+    "admin": {
+        "username": "",
+        "hashPassword": ""
+    },
+    "tokenSecretKey": ""
+}
