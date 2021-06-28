@@ -6,6 +6,7 @@ const cors = require('cors')
 const config = require('config')
 const expressListEndpoints = require('express-list-endpoints')
 const bullBoard = require('bull-board')
+const path = require('path')
 require('express-async-errors')
 
 const router = require('./router')
@@ -14,6 +15,8 @@ const request = require('./middleware/request')
 const port = config.get('port') || 3000
 
 const app = express()
+
+app.use(express.static('public'));
 
 app.use(express.json({ limit: '10mb' }))
 app.use(express.urlencoded({ extended: false }))
@@ -25,16 +28,7 @@ app.use('/api', router)
 app.use('/queues', bullBoard.router)
 
 app.use((req, res, next) => {
-    return res.error(
-        {
-            message: '404 Not found',
-            url: req.originalUrl,
-            method: req.method,
-        },
-        {
-            code: 404,
-        },
-    )
+    return res.sendFile(path.join(__dirname, 'public/index.html'))
 })
 
 app.use((error, req, res, next) => {

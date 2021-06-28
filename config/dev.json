@@ -1,22 +1,21 @@
 {
-    "env": "",
-    "port": 3000,
-    "mongo_uri": "",
+    "env": "dev",
+    "port": 8000,
     "database": {
-        "name": "",
-        "user": "",
-        "password": "",
-        "host": "",
-        "port": ""
+        "name": "thongkebaibao",
+        "user": "admin",
+        "password": "abc123",
+        "host": "127.0.0.1",
+        "port": "3306"
     },
     "redis": {
-        "password": "",
-        "host": "",
+        "host": "127.0.0.1",
         "port": 6379
     },
     "admin": {
-        "username": "",
-        "hashPassword": ""
+        "username": "admin",
+        "hashPassword": "$2b$10$mZX.2ziitFED6Xhx/lCTxOMyTpSBtsSKR9wtiUhmFm1cB45K1NHuq",
+        "plainPassword": "UqNEHMR9xBMrRPkY"
     },
-    "tokenSecretKey": ""
+    "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4"
 }
