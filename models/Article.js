@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             defaultValue: 'active'
         },
         authors: {
-            type: Sequelize.STRING,
+            type: Sequelize.STRING(512),
             allowNull: false,
         },
         year: {
@@ -21,8 +21,19 @@ module.exports = (sequelize, Sequelize) => {
         citedCount: {
             type: Sequelize.INTEGER,
         },
+        venue: {
+            type: Sequelize.STRING
+        },
         publisher: {
             type: Sequelize.STRING,
         },
+        publicationDate: {
+            type: Sequelize.DATEONLY
+        },
+        categoryId: {
+            type: Sequelize.INTEGER,
+            allowNull: false,
+            defaultValue: 1
+        }
     })
 }

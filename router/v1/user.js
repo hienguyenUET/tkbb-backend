@@ -77,5 +77,14 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
     res.success()
 })
 
+router.put('/:id', verifyToken, async (req, res) => {
+    const id = req.getParam('id')
+    const user = await User.findByPk(id);
+    let gsUrl = req.getParam('gsUrl');
+    console.log(gsUrl);
+    user.gsUrl = gsUrl || user.gsUrl;
+    await user.save();
+    res.success();
+});
 
 module.exports = router

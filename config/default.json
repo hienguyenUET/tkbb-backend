@@ -17,10 +17,5 @@
         "hashPassword": "$2b$10$mZX.2ziitFED6Xhx/lCTxOMyTpSBtsSKR9wtiUhmFm1cB45K1NHuq",
         "plainPassword": "UqNEHMR9xBMrRPkY"
     },
-    "tunghx": {
-        "username": "tunghx",
-        "hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
-        "plainPassword": "abc123"
-    },
     "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4"
 }

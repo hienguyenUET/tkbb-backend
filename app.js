@@ -57,5 +57,6 @@ app.listen(port, () => {
     console.log('eroc: 🧬 list apis')
     expressListEndpoints(app).forEach((api) => {
         api.methods.forEach((m) => console.log(`    ${m.padEnd(6)} ${api.path}`))
-    })
-})
+    });
+});
+require('./job/worker');

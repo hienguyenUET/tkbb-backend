@@ -24,6 +24,7 @@ const sequelize = new Sequelize(
             collate: 'utf8mb4_unicode_ci',
             freezeTableName: true
         },
+        logging: false
     }
 )
 
@@ -49,9 +50,9 @@ db.connect = async() => {
 db.User = require('./User')(sequelize, Sequelize)
 db.Article = require('./Article')(sequelize, Sequelize)
 
-db.Publishcation = require('./Publishcation')(sequelize, Sequelize)
-db.Publishcation.STATIC = require('./Publishcation').STATIC
+db.DiaChiCongBo = require('./DiaChiCongBo')(sequelize, Sequelize)
 
+db.Category = require('./Category')(sequelize, Sequelize)
 
 db.User.hasMany(db.Article, {
     foreignKey: 'uid',
@@ -63,15 +64,38 @@ db.Article.belongsTo(db.User, {
     sourceKey: 'id'
 })
 
-db.Article.belongsTo(db.Publishcation, {
+db.Article.belongsTo(db.Category, {
+    foreignKey: 'categoryId',
+    sourceKey: 'id'
+});
+
+db.Category.hasMany(db.Article, {
+    foreignKey: 'categoryId',
+    sourceKey: 'id'
+});
+/*
+db.Article.belongsTo(db.DiaChiCongBo, {
     foreignKey: 'publishcationId',
     sourceKey: 'id'
 })
-
-db.Publishcation.hasMany(db.Article, {
+*/
+/*
+db.DiaChiCongBo.hasMany(db.Article, {
     foreignKey: 'publishcationId',
     sourceKey: 'id'
 })
+*/
 
+db.DiaChiCongBo.belongsTo(db.Category, {
+    foreignKey: 'categoryId',
+    sourceKey: 'id'
+});
+
+db.Category.hasMany(db.DiaChiCongBo, {
+    foreignKey: 'categoryId',
+    sourceKey: 'id'
+});
+
+db.Junk = require('./Junk')(sequelize, Sequelize)
 
 module.exports = db

@@ -1,21 +1,33 @@
 'use strict'
-
+const { Article, Publishcation } = require('../models')
+const gsCrawlQueue = require('../job/queue');
+const {
+  GOOGLE_SCHOLAR_URL,
+  GOOGLE_SCHOLAR_PROFILE_URL,
+  GOOGLE_SCHOLAR_URL_PREFIX
+} = require('../consts.js');
 let scholar = (function () {
+  
   let request = require('request')
   let cheerio = require('cheerio')
   let striptags = require('striptags')
   const throttledQueue = require('throttled-queue')
+  const RateLimiter = require('limiter').RateLimiter;
 
   // 1 per 200 ms ~= 5/s per
   // https://developers.google.com/webmaster-tools/search-console-api-original/v3/limits
+  const secondLimiter = new RateLimiter({
+    tokensPerInterval: 1,
+    interval: 'second'
+  });
+  const minuteLimiter = new RateLimiter({
+    tokensPerInterval: 60,
+    interval: 'minute'
+  });
 
   const perSecThrottle = throttledQueue(5, 1000)
   const perMinThrottle = throttledQueue(200, 60 * 1000)
   const RESULTS_PER_PAGE = 10
-
-  const GOOGLE_SCHOLAR_URL = 'https://scholar.google.com/scholar?hl=en&q='
-  const GOOGLE_SCHOLAR_PROFILE_URL = 'https://scholar.google.co.uk/citations?hl=en&user='
-  const GOOGLE_SCHOLAR_URL_PREFIX = 'https://scholar.google.com'
 
   const ELLIPSIS = '...';
   const ELLIPSIS_HTML_ENTITY = '&#x2026;'
@@ -31,16 +43,260 @@ let scholar = (function () {
 
   // regex with thanks to http://stackoverflow.com/a/5917250/1449799
   const RESULT_COUNT_RE = /\W*((\d+|\d{1,3}(,\d{3})*)(\.\d+)?) results/
+  
+  function verifyRequest(error, response) {
+    if (error) {
+      return error;
+    } 
+    console.log(`verifyRequesttt ${response.statusCode} - ${response.statusMessage}`);
+    if (response.statusCode !== 200) {
+      if (
+            response.statusCode === STATUS_CODE_FOR_RATE_LIMIT 
+        &&  response.statusMessage === STATUS_MESSAGE_FOR_RATE_LIMIT 
+        &&  response.body.indexOf(STATUS_MESSAGE_BODY) > -1
+      ) {
+        return new Error('You are being rate-limited by google. you have made too many requests too quickly. see: https://support.google.com/websearch/answer/86640');
+      }
+      console.log('response status code: ' + response.statusCode + ' - ' + response.statusMessage);
+      return new Error('response status code: ' + response.statusCode + ' - ' + response.statusMessage);
+    } 
+  }
+
+  async function promiseRequest(requestOptions) {
+    await minuteLimiter.removeTokens(1);
+    await secondLimiter.removeTokens(1);
+    return new Promise((resolve, reject) => {
+      request(requestOptions, function(error, response, html) {
+        let err = verifyRequest(error, response)
+        if (!err) {
+          resolve(html);
+        }
+        else reject(err);
+      });
+    });
+  }
+  function parseCitationHtml(citationLink, html) {
+    let $2 = cheerio.load(html);
+    let SELECTOR_OCI_TABLE_ROW = '#gsc_oci_table .gs_scl';
+    let rows = $2(SELECTOR_OCI_TABLE_ROW);
+    let data = {};
+    data.citedUrl = GOOGLE_SCHOLAR_URL_PREFIX + citationLink;
+    let title = $2('#gsc_oci_title');
+    data.title = title.text();
+    if (!data.title || !data.title.length) {
+      console.log('====' ,$2('#gsc_oci_title').html());
+    }
+    for (let i = 0; i < rows.length; i++) {
+      let field = $2(rows[i]).find('.gsc_oci_field').text().trim().toLowerCase().replace(/\s+/g, "_");
+      let value = $2(rows[i]).find('.gsc_oci_value').text().trim();
+      switch(field) {
+      case 'total_citations':
+        value = $2(rows[i]).find('.gsc_oci_value > div > a').text().trim().replace('Cited by ','');
+        data[field] = value;
+        break;
+      case 'authors':
+        data[field] = value.split(/\s*,\s*/);
+        break;
+      case 'inventors':
+        data['authors'] = value.split(/\s*,\s*/);
+        data['publisher'] = 'Patent';
+        data['venue'] = 'Patent';
+        break;
+      case 'description':
+        break;
+      default: 
+        data[field] = value;
+        break;
+      }
+    }
+    return data;
+  }
+  function processHtml(html, user) {
+    let $ = cheerio.load(html)
+    const SELECTOR_CITATION_A = '#gsc_a_t .gsc_a_tr .gsc_a_t a'
+    let citations = $(SELECTOR_CITATION_A)
+    
+    for (let i = 0; i < citations.length; i++) {
+      let citationLink = $(citations[i]).attr('href');
+      gsCrawlQueue.add({
+        type: 1,
+        citationLink,
+        user
+      });
+    }
+    return citations.length;
+  }
+  function processHtml1(html, RESULTS_TAG, TITLE_TAG, AUTHOR_NAMES_TAG, FOOTER_LINKS_TAG) {
+    let $ = cheerio.load(html)
+        
+    let results = $(RESULTS_TAG)
+    let resultCount = 0
+    
+    let processedResults = []
+    for (let r of results) {
+      let title = $(r).find(TITLE_TAG).text().trim()
+      let authorNamesHTMLString = $(r).find(AUTHOR_NAMES_TAG).html()
+      let etAl = false
+      let etAlBegin = false
+      let authors = []
+      let footerLinks = $(r).find(FOOTER_LINKS_TAG)
+      let citedCount = 0
+      let citedUrl = ''
+      
+      // Profile specific
+      let year = $(r).find('.gsc_a_y').text()
+      $(r).find('.gs_gray').last().find('.gs_oph').remove()
+      let venueHTMLString = $(r).find('.gs_gray').last().html()
+      let venue;
+      
+      if ($(footerLinks[0]).text().indexOf(CITATION_COUNT_PREFIX) >= 0) {
+        citedCount = $(footerLinks[0]).text().substr(CITATION_COUNT_PREFIX.length)
+      }
+      if ($(footerLinks[0]).attr &&
+        $(footerLinks[0]).attr('href') &&
+        $(footerLinks[0]).attr('href').length > 0) {
+        citedUrl = GOOGLE_SCHOLAR_URL_PREFIX + $(footerLinks[0]).attr('href')
+      }
+      
+      if (footerLinks &&
+        footerLinks.length &&
+        footerLinks.length > 0) {
+        // Relax restrictions as no 'Cited by' prefix on author page.
+          citedCount = $(footerLinks[0]).text();
+          if ($(footerLinks[0]).text &&
+            $(footerLinks[0]).text().indexOf(CITATION_COUNT_PREFIX) >= 0) {
+            citedCount = $(footerLinks[0]).text().substr(CITATION_COUNT_PREFIX.length)
+          }
+
+        if ($(footerLinks[1]).text &&
+          $(footerLinks[1]).text().indexOf(RELATED_ARTICLES_PREFIX) >= 0 &&
+          $(footerLinks[1]).attr &&
+          $(footerLinks[1]).attr('href') &&
+          $(footerLinks[1]).attr('href').length > 0) {
+        }
+      }
+      if (authorNamesHTMLString) {
+        let cleanString = authorNamesHTMLString;
+        
+        // Check also for non-HTML ellipsis.
+        removeFromEnd(cleanString, ELLIPSIS_HTML_ENTITY, function(resultA, stringA) { 
+            removeFromEnd(cleanString, ELLIPSIS, function(resultB, stringB) {
+                if ( resultA ) {
+                  cleanString = stringA;
+                } else if ( resultB ) {
+                cleanString = stringB;
+              } else if ( resultA || resultB ) {
+                etAl = true; 
+              }
+              });
+          });
+        
+        removeFromBeginning(cleanString, ELLIPSIS_HTML_ENTITY, function(resultA, stringA) { 
+          removeFromBeginning(cleanString, ELLIPSIS, function(resultB, stringB) {
+            if ( resultA ) {
+              cleanString = stringA;
+            } 
+            else if ( resultB ) {
+              cleanString = stringB;
+            } 
+            else if ( resultA || resultB ) {
+              etAlBegin = true; 
+            }
+          });
+        });
+        
+        let htmlAuthorNames = cleanString.split(', ')
+        if (etAl) {
+          htmlAuthorNames.push(ET_AL_NAME)
+        }
+        if (etAlBegin) {
+          htmlAuthorNames.unshift(ET_AL_NAME)
+        }
+        authors = htmlAuthorNames.map(name => {
+          let tmp = cheerio.load(name)
+          let authorObj = {
+            name: '',
+            url: ''
+          }
+          if (tmp('a').length === 0) {
+            authorObj.name = striptags(name)
+          } else {
+            authorObj.name = tmp('a').text()
+            authorObj.url = GOOGLE_SCHOLAR_URL_PREFIX + tmp('a').attr('href')
+          }
+          return authorObj
+        })
+      }
+      
+      // Profile specific.
+      if ( venueHTMLString ) {
+          
+        venue = venueHTMLString;
+        
+        removeFromEnd(venue, ELLIPSIS_HTML_ENTITY, function(resultA, stringA) {
+          removeFromEnd(venue, ELLIPSIS, function(resultB, stringB) {
+            if ( resultA ) {
+              venue = stringA;
+            } else if ( resultB ) {
+              venue = stringB;
+            }
+            removeFromEnd(venue, COMMA_HTML_ENTITY, function(resultC, stringC) { 
+              removeFromEnd(venue, COMMA, function(resultD, stringD) {
+                if ( resultC ) {
+                    venue = stringC;
+                  } else if ( resultD ) {
+                  venue = stringD;
+                }
+              });
+            });
+          });
+        });
+      }
+      
+      processedResults.push({
+        title: title,
+        url: url,
+        authors: authors,
+        citedCount: citedCount,
+        citedUrl: citedUrl,
+        year: year,
+        venue: venue
+      });
+      
+    }
+    
+    let resultsCountString = $('#gs_ab_md').text()
+    if (resultsCountString && resultsCountString.trim().length > 0) {
+      let matches = RESULT_COUNT_RE.exec(resultsCountString)
+      if (matches && matches.length > 0) {
+        resultCount = parseInt(matches[1].replace(/,/g, ''))
+      } else {
+        resultCount = processedResults.length
+      }
+    } else {
+      resultCount = processedResults.length
+    }
+
+    resolve({
+      results: processedResults,
+      count: resultCount,
+    })
+  }
 
   function responseAction(error, response, reject, html, callback) {
     if (error) {
-	  reject(error)
+      reject(error)
     } else if (response.statusCode !== 200) {
-      if (response.statusCode === STATUS_CODE_FOR_RATE_LIMIT && response.statusMessage === STATUS_MESSAGE_FOR_RATE_LIMIT && response.body.indexOf(STATUS_MESSAGE_BODY) > -1) {
-	    reject(new Error('you are being rate-limited by google. you have made too many requests too quickly. see: https://support.google.com/websearch/answer/86640'))
-      } else {
-	    reject(new Error('expected statusCode 200 on http response, but got: ' + response.statusCode))
-	  }
+      if (
+            response.statusCode === STATUS_CODE_FOR_RATE_LIMIT 
+        &&  response.statusMessage === STATUS_MESSAGE_FOR_RATE_LIMIT 
+        &&  response.body.indexOf(STATUS_MESSAGE_BODY) > -1
+      ) {
+        reject(new Error('You are being rate-limited by google. you have made too many requests too quickly. see: https://support.google.com/websearch/answer/86640'))
+      } 
+      else {
+        reject(new Error('expected statusCode 200 on http response, but got: ' + response.statusCode))
+      }
     } else {
       callback(html);
     }
@@ -65,7 +321,7 @@ let scholar = (function () {
   function scholarResultsCallback(resolve, reject, RESULTS_TAG, TITLE_TAG, URL_TAG, AUTHOR_NAMES_TAG, FOOTER_LINKS_TAG) {
     return function (error, response, html) {
       responseAction(error, response, reject, html, function callback(html) {
-    	      let $ = cheerio.load(html)
+        let $ = cheerio.load(html)
     	      
 	      let results = $(RESULTS_TAG)
 	      let resultCount = 0
@@ -91,7 +347,6 @@ let scholar = (function () {
 	        let citedCount = 0
 	        let citedUrl = ''
 	        let relatedUrl = ''
-	        let pdfUrl = $($(r).find('.gs_ggsd a')[0]).attr('href')
 	        
 	        // Profile specific
 	        let year = $(r).find('.gsc_a_y').text()
@@ -182,25 +437,24 @@ let scholar = (function () {
 	        	  
 	          venue = venueHTMLString;
 	          
-	        	  removeFromEnd(venue, ELLIPSIS_HTML_ENTITY, function(resultA, stringA) { 
-	        	    removeFromEnd(venue, ELLIPSIS, function(resultB, stringB) {
-	        	    	  if ( resultA ) {
-	        	    	  	venue = stringA;
-	        	    	  } else if ( resultB ) {
-	        	       	venue = stringB;
-	        	      }
-	        	    	  removeFromEnd(venue, COMMA_HTML_ENTITY, function(resultC, stringC) { 
-	      	        removeFromEnd(venue, COMMA, function(resultD, stringD) {
-	      	        	if ( resultC ) {
-	        	    	  	  venue = stringC;
-	        	    	    } else if ( resultD ) {
-	        	       	  venue = stringD;
-	        	        }
-	      	        });
-	        	    	  });
-	        	    	});
-	        	  });
-	        	  
+            removeFromEnd(venue, ELLIPSIS_HTML_ENTITY, function(resultA, stringA) {
+              removeFromEnd(venue, ELLIPSIS, function(resultB, stringB) {
+                if ( resultA ) {
+                  venue = stringA;
+                } else if ( resultB ) {
+                  venue = stringB;
+                }
+                removeFromEnd(venue, COMMA_HTML_ENTITY, function(resultC, stringC) { 
+                  removeFromEnd(venue, COMMA, function(resultD, stringD) {
+                    if ( resultC ) {
+                        venue = stringC;
+                      } else if ( resultD ) {
+                      venue = stringD;
+                    }
+                  });
+                });
+              });
+            });
 	        }
 	        
 	        processedResults.push({
@@ -214,9 +468,9 @@ let scholar = (function () {
 	          pdf: pdfUrl,
 	          year: year,
 	          venue: venue
-	        })
+	        });
 	        
-	      })
+	      });
 	      
 	      let resultsCountString = $('#gs_ab_md').text()
 	      if (resultsCountString && resultsCountString.trim().length > 0) {
@@ -271,7 +525,7 @@ let scholar = (function () {
 	        }
 	      })
 	   }); 
-     }
+   }
   }
   
   function search (query) {
@@ -292,22 +546,17 @@ let scholar = (function () {
     return p
   }
   
-  function profile (id) {
-    let p = new Promise(function (resolve, reject) {
-      perMinThrottle(() => {
-        perSecThrottle(() => {
-          var requestOptions = {
-            jar: true,
-			'headers': {
-				'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
-			  }
-          }
-          requestOptions.url = encodeURI(GOOGLE_SCHOLAR_PROFILE_URL + id)
-          request(requestOptions, scholarResultsCallback(resolve, reject, '.gsc_a_tr', '.gsc_a_t a', '.gs_ri h3 a', '.gs_gray', '.gsc_a_c a'))
-        })
-      })
-    })
-    return p
+  async function profile (id, user) {
+    var requestOptions = {
+      jar: true,
+      'headers': {
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.114 Safari/537.36',
+      }
+    }
+    requestOptions.url = encodeURI(GOOGLE_SCHOLAR_PROFILE_URL + id)
+    let html = await promiseRequest(requestOptions);
+    let n = processHtml(html, user);
+    return n;
   }
 
   function all (query) {
@@ -344,7 +593,9 @@ let scholar = (function () {
   return {
     search: search,
     all: all,
-    profile: profile
+    profile: profile,
+    promiseRequest,
+    parseCitationHtml    
   }
 })()
 

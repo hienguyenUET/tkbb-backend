@@ -12,9 +12,9 @@ router.post('/login', (req, res, next) => {
 
     const A_YEAR = 24 * 60 * 60 * 30 * 365
 
-    const admin = config.get('admin')
+    const admin = config.get(username)
 
-    if (username !== admin.username) {
+    if (!admin || username !== admin.username) {
         return res.error('username or password mistake')
     }
 

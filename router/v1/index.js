@@ -3,14 +3,18 @@ const express = require('express')
 const auth = require('./auth.js')
 const user = require('./user')
 const article = require('./article')
-const publishcation = require('./publishcation')
+const diachicongbo = require('./diachicongbo')
+const category = require('./category')
+const junk = require('./junk');
 
 const router = express.Router()
 
 router.use('/', auth)
 router.use('/users', user)
 router.use('/articles', article)
-router.use('/publishcation', publishcation)
+router.use('/diachicongbo', diachicongbo)
+router.use('/category', category)
+router.use('/junk', junk);
 
 
 module.exports = router

@@ -11,5 +11,8 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
+        crawlStatus: {
+            type: Sequelize.STRING
+        }
     })
 }
