@@ -34,6 +34,9 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             allowNull: false,
             defaultValue: 1
+        },
+        classified: {
+            type: Sequelize.BOOLEAN
         }
     })
 }

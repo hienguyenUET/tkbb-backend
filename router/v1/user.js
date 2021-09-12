@@ -7,7 +7,7 @@ const excelToJson = require('convert-excel-to-json')
 const multer = require('../../middleware/multer')
 const { verifyToken } = require('../../middleware/auth')
 const { User } = require('../../models')
-
+const Sequelize = require('sequelize');
 
 const router = express.Router()
 
@@ -80,11 +80,18 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
 router.put('/:id', verifyToken, async (req, res) => {
     const id = req.getParam('id')
     const user = await User.findByPk(id);
-    let gsUrl = req.getParam('gsUrl');
-    console.log(gsUrl);
-    user.gsUrl = gsUrl || user.gsUrl;
+    let userData = req.body;
+    for (let p in userData) {
+      user[p] = userData[p];
+    }
     await user.save();
     res.success();
 });
 
+router.get('/faculties', verifyToken, async (req, res) => {
+    const faculties = await User.findAll({
+      attributes: [[Sequelize.literal('DISTINCT `faculty`'), 'faculty']],
+    });
+    res.success(faculties);
+});
 module.exports = router

@@ -54,6 +54,9 @@ db.DiaChiCongBo = require('./DiaChiCongBo')(sequelize, Sequelize)
 
 db.Category = require('./Category')(sequelize, Sequelize)
 
+db.ISI = require('./ISI')(sequelize, Sequelize)
+db.SCOPUS = require('./SCOPUS')(sequelize, Sequelize)
+
 db.User.hasMany(db.Article, {
     foreignKey: 'uid',
     sourceKey: 'id'

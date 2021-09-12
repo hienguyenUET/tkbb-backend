@@ -1,9 +1,10 @@
 const express = require('express')
 
-const { Article, User, Category } = require('../../models/index')
+const { sequelize, Article, User, Category } = require('../../models/index');
 const { verifyToken } = require('../../middleware/auth')
 const gsCrawlQueue = require('../../job/queue')
 
+const {QueryTypes} = require('sequelize');
 
 const router = express.Router()
 
@@ -61,6 +62,9 @@ router.put('/:id', verifyToken, async (req, res, next) => {
     const article = await Article.findByPk(id)
     article.categoryId = articleData.categoryId || article.categoryId;
     article.uid = articleData.uid || articleData.uid;
+    article.classified = (articleData.classified === undefined)?article.classified:articleData.classified;
+    article.venue = (articleData.venue === undefined)?article.venue:articleData.venue;
+    article.publicationDate = (articleData.publicationDate === undefined)?article.publicationDate:articleData.publicationDate;
     article.save();
 
     return res.success()
@@ -95,7 +99,44 @@ router.get('/', verifyToken, async (req, res, next) => {
     })
 
     return res.success(articles)
-})
+});
 
+router.post('/query', verifyToken, async (req, res) => {
+    const criteria = req.body;
+    console.log(criteria);
+    let whereFaculty = "";
+    let whereCategory = "";
+    let whereStartDate = "";
+    let whereEndDate = "";
+    if (criteria.faculty) {
+      whereFaculty = "AND users.faculty = :faculty"
+    }
+    if (criteria.category) {
+      whereCategory = "AND category.id = :category"
+    }
+    if (criteria.startDate) {
+      whereStartDate = 'AND articles.publicationDate >= :startDate'
+    }
+    if (criteria.endDate) {
+      whereEndDate = 'AND articles.publicationDate < :endDate'
+    }
+    const articles = await sequelize.query(`SELECT 
+        articles.id as id, title, authors, users.faculty as faculty, publicationDate, venue, publisher, category.name as category
+      FROM articles 
+        INNER JOIN users on users.id = articles.uid
+        INNER JOIN category on articles.categoryId = category.id
+      WHERE 
+        category.id > 1 
+      ${whereFaculty}
+      ${whereCategory}
+      ${whereStartDate}
+      ${whereEndDate}
+    `, {
+      replacements: criteria,
+      type: QueryTypes.SELECT
+    });
+
+    res.success(articles);
+});
 
 module.exports = router

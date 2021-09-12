@@ -14,7 +14,9 @@ const fileFilter = (req, file, cb) => {
     const extension = path.extname(file.originalname)
     if (extension === '.xlsx')
         cb(null, true)
-    else cb(new Error('file is not excel'), false)
+    else if (extension === '.csv') 
+        cb(null, true)
+    else cb(new Error('file is not excel or csv'), false)
 }
 
 const upload = multer({

@@ -13,6 +13,14 @@ module.exports = (sequelize, Sequelize) => {
         },
         crawlStatus: {
             type: Sequelize.STRING
+        },
+        startDate: {
+            type: Sequelize.DATEONLY,
+            allowNull: true
+        },
+        endDate: {
+            type: Sequelize.DATEONLY,
+            allowNull: true
         }
     })
 }

@@ -72,11 +72,11 @@ async function doCitationJob(jobData) {
       publisher: articleData.publisher,
       publicationDate: pubDate.toISOString().slice(0, 10)
     }
-    const titleExist = await Article.findOne({
-      where: { title: articleData.title }
+    const isExisting = await Article.findOne({
+      where: { citedUrl: articleData.citedUrl }
     })
 
-    if (!titleExist) {
+    if (!isExisting) {
       //const matches = stringSimilarity.findBestMatch(raw.publisher || '', pubNames)
       //if (matches.bestMatch.rating >= 0.7) {
       //  raw.publishcationId = pubs[matches.bestMatchIndex].dataValues.id
