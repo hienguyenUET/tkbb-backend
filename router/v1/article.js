@@ -82,6 +82,7 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
 router.get('/', verifyToken, async (req, res, next) => {
     let articles = await Article.findAll({
         order: [
+          ['publicationDate', 'DESC'],
           ['id', 'ASC']
         ],
         include: [{ 
@@ -120,17 +121,35 @@ router.post('/query', verifyToken, async (req, res) => {
     if (criteria.endDate) {
       whereEndDate = 'AND articles.publicationDate < :endDate'
     }
-    const articles = await sequelize.query(`SELECT 
-        articles.id as id, title, authors, users.faculty as faculty, publicationDate, venue, publisher, category.name as category
-      FROM articles 
-        INNER JOIN users on users.id = articles.uid
-        INNER JOIN category on articles.categoryId = category.id
-      WHERE 
-        category.id > 1 
-      ${whereFaculty}
-      ${whereCategory}
-      ${whereStartDate}
-      ${whereEndDate}
+    const articles = await sequelize.query(`SELECT
+      title, id, 
+      SUBSTRING_INDEX(authors, '|', 1) as authors,
+      SUBSTRING_INDEX(faculty, '|', 1) as faculty,
+      SUBSTRING_INDEX(publicationDate, '|', 1) as publicationDate,
+      SUBSTRING_INDEX(venue, '|', 1) as venue,
+      SUBSTRING_INDEX(publisher, '|', 1) as publisher,
+      category
+      FROM (
+        SELECT 
+           title, 
+           MIN(articles.id) as id, 
+           GROUP_CONCAT(distinct authors SEPARATOR '|') as authors, 
+           GROUP_CONCAT(distinct users.faculty SEPARATOR '|') as faculty, 
+           GROUP_CONCAT(distinct publicationDate SEPARATOR '|') as publicationDate, 
+           GROUP_CONCAT(distinct venue SEPARATOR '|') as venue, 
+           GROUP_CONCAT(distinct publisher SEPARATOR '|') as publisher, 
+           GROUP_CONCAT(distinct category.name SEPARATOR '|') as category
+        FROM articles 
+          INNER JOIN users on users.id = articles.uid
+          INNER JOIN category on articles.categoryId = category.id
+        WHERE 
+          category.id > 1 AND articles.classified is TRUE
+        ${whereFaculty}
+        ${whereCategory}
+        ${whereStartDate}
+        ${whereEndDate}
+        GROUP BY title
+      ) as t
     `, {
       replacements: criteria,
       type: QueryTypes.SELECT
