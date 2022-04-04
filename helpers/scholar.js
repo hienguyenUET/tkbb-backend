@@ -111,18 +111,35 @@ let scholar = (function () {
     }
     return data;
   }
-  function processHtml(html, user) {
+  function processHtml(html, user, yearWindow = -1) {
     let $ = cheerio.load(html)
     const SELECTOR_CITATION_A = '#gsc_a_t .gsc_a_tr .gsc_a_t a'
-    let citations = $(SELECTOR_CITATION_A)
-    
+    const SELECTOR_CITATION_Y = '#gsc_a_t .gsc_a_tr .gsc_a_y span'
+    let citations = $(SELECTOR_CITATION_A);
+    let years = $(SELECTOR_CITATION_Y);
+    let currentYear = new Date().getFullYear();
+    console.log('processHtml', yearWindow, currentYear);
     for (let i = 0; i < citations.length; i++) {
-      let citationLink = $(citations[i]).attr('href');
-      gsCrawlQueue.add({
-        type: 1,
-        citationLink,
-        user
-      });
+      if (yearWindow < 0) {
+        let citationLink = $(citations[i]).attr('href');
+        gsCrawlQueue.add({
+          type: 1,
+          citationLink,
+          user
+        });
+      }
+      else {
+        let y = parseInt($(years[i]).text());
+        console.log('y: ', y, $(years[i]).text());
+        if (y >= currentYear - yearWindow) {
+          let citationLink = $(citations[i]).attr('href');
+          gsCrawlQueue.add({
+            type: 1,
+            citationLink,
+            user
+          });
+        }
+      }
     }
     return citations.length;
   }
@@ -546,7 +563,7 @@ let scholar = (function () {
     return p
   }
   
-  async function profile (id, user) {
+  async function profile (id, user, yearWindow) {
     var requestOptions = {
       jar: true,
       'headers': {
@@ -555,7 +572,7 @@ let scholar = (function () {
     }
     requestOptions.url = encodeURI(GOOGLE_SCHOLAR_PROFILE_URL + id)
     let html = await promiseRequest(requestOptions);
-    let n = processHtml(html, user);
+    let n = processHtml(html, user, yearWindow);
     return n;
   }
 

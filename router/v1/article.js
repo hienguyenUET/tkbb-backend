@@ -10,12 +10,13 @@ const router = express.Router()
 
 router.post('/crawling', verifyToken, async (req, res, next) => {
     const users = await User.findAll()
-
+    const yearWindow = isNaN(req.body.yearWindow)? -1 : parseInt(req.body.yearWindow);
     for (const { dataValues: user } of users) {
         gsCrawlQueue.add({ 
           type: 0, 
           start: 0,
-          user 
+          user,
+          yearWindow
         })
     }
 
@@ -24,7 +25,8 @@ router.post('/crawling', verifyToken, async (req, res, next) => {
 
 router.post('/crawling/user/:id', verifyToken, async (req, res, next) => {
     const id = req.getParam('id')
-
+    const yearWindow = isNaN(req.body.yearWindow)? -1 : parseInt(req.body.yearWindow);
+    console.log(req.body.yearWindow, yearWindow);
     const user = await User.findByPk(id)
     user.crawlStatus = '';
     await user.save();
@@ -32,7 +34,8 @@ router.post('/crawling/user/:id', verifyToken, async (req, res, next) => {
     gsCrawlQueue.add({ 
       type: 0,
       start: 0,
-      user 
+      user,
+      yearWindow
     })
 
     return res.success()
@@ -158,4 +161,18 @@ router.post('/query', verifyToken, async (req, res) => {
     res.success(articles);
 });
 
+router.get('/dedup', verifyToken, async (req, res) => {
+    const articles = await sequelize.query(`SELECT MIN(id) id, title, COUNT(cat) cnt
+      FROM (SELECT
+        title, c.name as cat, min(a.id) as id
+        FROM articles a
+          INNER JOIN category c ON a.categoryId = c.id
+        WHERE c.id > 1
+        GROUP BY a.title, c.name) t
+      GROUP BY title
+      HAVING cnt > 1
+      ORDER BY id DESC`, { type: QueryTypes.SELECT });
+      
+    res.success(articles);
+});
 module.exports = router

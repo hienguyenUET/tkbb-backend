@@ -13,19 +13,21 @@ const {
 const WINDOW_SIZE = 100;
 
 async function doProfileJob(jobData) {
-  const { start, user } = jobData;
+  const { start, user, yearWindow } = jobData;
+  console.log('YearWindow', yearWindow);
   try {
     const gsUserId = new URL(user.gsUrl)?.searchParams?.get('user');
 
     if (!gsUserId) {
       throw new Error('Missing Google Scholar User id');
     }
-    let n = await scholarlyExtended.profile(`${gsUserId}&cstart=${start}&pagesize=${WINDOW_SIZE}`, user);
+    let n = await scholarlyExtended.profile(`${gsUserId}&cstart=${start}&pagesize=${WINDOW_SIZE}`, user, yearWindow);
     if (n === WINDOW_SIZE) {
       gsCrawlQueue.add({
         type: 0,
         start: start + WINDOW_SIZE,
-        user
+        user,
+        yearWindow
       });
     }
     return;
@@ -72,18 +74,31 @@ async function doCitationJob(jobData) {
       publisher: articleData.publisher,
       publicationDate: pubDate.toISOString().slice(0, 10)
     }
+    /* 
     const isExisting = await Article.findOne({
       where: { citedUrl: articleData.citedUrl }
     })
-
+    const isExisting = await Article.findOne({
+      where: { 
+        uid: user.id, 
+        title: articleData.title, 
+        venue: articleData.journal || articleData.conference || articleData.book || articleData.source
+      }
+    })
     if (!isExisting) {
+    */
       //const matches = stringSimilarity.findBestMatch(raw.publisher || '', pubNames)
       //if (matches.bestMatch.rating >= 0.7) {
       //  raw.publishcationId = pubs[matches.bestMatchIndex].dataValues.id
       //}
       console.log('title: ', raw.title);
-      await Article.create(raw);
-    }
+      try {
+        await Article.create(raw);
+      }
+      catch(e) {
+        console.log(e.message);
+      }
+    //}
     return;
   }
   catch(err) {

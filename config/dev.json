@@ -47,5 +47,45 @@
         "hashPassword": "$2b$05$PE6lgyir458wguGA1AVCLOdvvvlzKWLEo0u.MNjFptE7H9OCecNB6",
         "plainPassword": "nhung998@2021"
     },
+    "trinhcd": {
+        "username": "trinhcd",
+        "hashPassword": "$2b$05$bxiO6f787sP0EHOJMgtqBewE2ymDBi8JTVV5e7Gw0hgz4aR6LBYJS",
+        "plainPassword": "tkbb2021"
+    },
+    "cntt": {
+        "username": "cntt",
+        "hashPassword": "$2b$05$GEQATOxEMO4zSekU4cUlTuKYm1szhEECop4LI5IqGUx0P8YblJNBC",
+        "plainPassword": "cn77#2021"
+    },
+    "dtvt": {
+        "username": "dtvt",
+        "hashPassword": "$2b$05$0XdYrBUTei0Z6huMbZCTr.rK/Gp/acA4c0uPscweD8yBMrN.DrvxC",
+        "plainPassword": "d7v7$2021"
+    },
+    "chkt": {
+        "username": "chkt",
+        "hashPassword": "$2b$05$SzX08pm2XjhGi2BXHjbpRe5vUxcMrzAnIdqYMm9ltB9u4p/jIX0bK",
+        "plainPassword": "chk7!2021"
+    },
+    "vlkt": {
+        "username": "vlkt",
+        "hashPassword": "$2b$05$qnaQDfjQdfebJW2KAEeFpu/bMxi7TClm7prUZRibGRsE8PFvcfR6m",
+        "plainPassword": "v1k7%2021"
+    },
+    "cnnn": {
+        "username": "cnnn",
+        "hashPassword": "$2b$05$S3Wx57pP.4F4PJR0OLoKous5JzrAoeqKN5fpav/1b5OY9VgF/y8qe",
+        "plainPassword": "cn3^2021"
+    },
+    "hkvt": {
+        "username": "hkvt",
+        "hashPassword": "$2b$05$3Yw2jbMsMwJ4qJCndRTOr.AxwmdALpsY4HqrW2ZhIQRYrPHK9aiqa",
+        "plainPassword": "hkv7@2021"
+    },
+    "ngocan": {
+        "username": "ngocan",
+        "hashPassword": "$2b$05$tayTQCKRhdwCBpNS4JN87egMoDarnJCzqo6Ku52KpAJVwU5J0OKCW",
+        "plainPassword": "khcn-htpt@2022"
+    },
     "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4"
 }

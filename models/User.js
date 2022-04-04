@@ -21,6 +21,9 @@ module.exports = (sequelize, Sequelize) => {
         endDate: {
             type: Sequelize.DATEONLY,
             allowNull: true
+        },
+        englishName: {
+            type: Sequelize.STRING
         }
     })
 }
