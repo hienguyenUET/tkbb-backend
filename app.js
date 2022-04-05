@@ -52,9 +52,9 @@ app.use((error, req, res, next) => {
 })
 
 app.listen(port, () => {    
-    console.log(`🍑 server is running at port ${port} on ${config.get('env')}`)
+    console.log(` server is running at port ${port} on ${config.get('env')}`)
 
-    console.log('eroc: 🧬 list apis')
+    console.log('eroc: list apis')
     expressListEndpoints(app).forEach((api) => {
         api.methods.forEach((m) => console.log(`    ${m.padEnd(6)} ${api.path}`))
     });

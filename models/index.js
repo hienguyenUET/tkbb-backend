@@ -35,7 +35,7 @@ db.connect = async() => {
     try {
         await db.sequelize.authenticate()
 
-        console.log(`mysql: 🍱 Connect to ${dbInfo.host}:${dbInfo.port} successfully`)
+        console.log(`mysql: Connect to ${dbInfo.host}:${dbInfo.port} successfully`)
 
         sequelize.sync({
             force: false,

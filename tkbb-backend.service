@@ -1,0 +1,13 @@
+[Unit]
+Description=Service thongkebaibao backend
+After=network.target
+
+[Service]
+User=root
+WorkingDirectory=/opt/thongkebaibao/tkbb-backend
+Environment="NODE_ENV=dev"
+ExecStart=/usr/local/bin/node /opt/thongkebaibao/tkbb-backend/app.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

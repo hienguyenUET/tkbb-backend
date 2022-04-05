@@ -14,36 +14,43 @@
     },
     "admin": {
         "username": "admin",
+        "role": "admin",
         "hashPassword": "$2b$10$mZX.2ziitFED6Xhx/lCTxOMyTpSBtsSKR9wtiUhmFm1cB45K1NHuq",
         "plainPassword": "UqNEHMR9xBMrRPkY"
     },
     "tunghx": {
         "username": "tunghx",
+        "role": "admin",
         "hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
         "plainPassword": "abc123"
     },
     "hoaison": {
         "username": "hoaison",
+        "role": "admin",
         "hashPassword": "$2b$05$wZweRWUuic1InJEM.Dd7wui05oUwagxfxkYu7x4rW75GHmqbkc2Lq",
         "plainPassword": "hoaison@2021"
     },
     "minh": {
         "username": "minh",
+        "role": "admin",
         "hashPassword": "$2b$05$QJt7wOJhbzZsxX1KPlBPIO2YYx75YqRqRTUjXCqMHSjqt0dOMFi66",
         "plainPassword": "minh524@2021"
     },
     "giang": {
         "username": "giang",
+        "role": "admin",
         "hashPassword": "$2b$05$ge1zsfI8f51m6P3qH.S3o.T9BJccVQ0nR.gh4odiBPsDuse9x7nyW",
         "plainPassword": "giang873@2021"
     },
     "huyen": {
         "username": "huyen",
+        "role": "admin",
         "hashPassword": "$2b$05$4Vj8.N3XLl.nNaNRldEhi.gyWT5EV0T9hym.iKALSip0I82FQQVbO",
         "plainPassword": "huyen153@2021"
     },
     "nhung": {
         "username": "nhung",
+        "role": "admin",
         "hashPassword": "$2b$05$PE6lgyir458wguGA1AVCLOdvvvlzKWLEo0u.MNjFptE7H9OCecNB6",
         "plainPassword": "nhung998@2021"
     },
@@ -84,6 +91,7 @@
     },
     "ngocan": {
         "username": "ngocan",
+        "role": "admin",
         "hashPassword": "$2b$05$tayTQCKRhdwCBpNS4JN87egMoDarnJCzqo6Ku52KpAJVwU5J0OKCW",
         "plainPassword": "khcn-htpt@2022"
     },

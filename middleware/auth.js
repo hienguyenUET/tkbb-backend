@@ -8,6 +8,8 @@ function verifyToken(req, res, next) {
     if (token) {
         jwt.verify(token, secretKey, (err, decoded) => {
             if (err) {
+                console.log(token, secretKey);
+                console.error(err);
                 return res.error("token is invalid", { code: 403 })
             } else {
                 req.tokenData = decoded

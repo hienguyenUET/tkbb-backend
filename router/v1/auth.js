@@ -24,9 +24,9 @@ router.post('/login', (req, res, next) => {
         return res.error('username or password mistake')
     }
 
-    const token = jwt.sign({}, config.get('tokenSecretKey'), {expiresIn: A_YEAR})
+    const token = jwt.sign({role: admin.role || 'user'}, config.get('tokenSecretKey'), {expiresIn: A_YEAR});
 
-    res.success(token)
+    res.success( { token, role: admin.role } )
 })
 
 
