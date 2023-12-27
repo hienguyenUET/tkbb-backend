@@ -162,14 +162,14 @@ router.post('/query', verifyToken, async (req, res) => {
 });
 
 router.get('/dedup', verifyToken, async (req, res) => {
-    const articles = await sequelize.query(`SELECT MIN(id) id, title, COUNT(cat) cnt
+    const articles = await sequelize.query(`SELECT MIN(id) id, uid, title, COUNT(cat) cnt
       FROM (SELECT
-        title, c.name as cat, min(a.id) as id
+        title, uid, c.name as cat, min(a.id) as id
         FROM articles a
           INNER JOIN category c ON a.categoryId = c.id
         WHERE c.id > 1
-        GROUP BY a.title, c.name) t
-      GROUP BY title
+        GROUP BY a.title, a.uid, c.name) t
+      GROUP BY uid, title
       HAVING cnt > 1
       ORDER BY id DESC`, { type: QueryTypes.SELECT });
       

@@ -70,7 +70,7 @@ async function doCitationJob(jobData) {
       year: pubDate.getFullYear(),
       citedCount: +articleData.total_citations || 0,
       citedUrl: articleData.citedUrl || '',
-      venue: articleData.journal || articleData.conference || articleData.book || articleData.source,
+      venue: articleData.journal || articleData.conference || articleData.book || articleData.source || articleData.publisher || articleData.venue || 'Unknown',
       publisher: articleData.publisher,
       publicationDate: pubDate.toISOString().slice(0, 10)
     }
@@ -78,19 +78,17 @@ async function doCitationJob(jobData) {
     const isExisting = await Article.findOne({
       where: { citedUrl: articleData.citedUrl }
     })
+    console.log(+raw.uid, "+" + raw.title + "+", "-"+raw.venue+"-");
     const isExisting = await Article.findOne({
       where: { 
-        uid: user.id, 
-        title: articleData.title, 
-        venue: articleData.journal || articleData.conference || articleData.book || articleData.source
+        uid: raw.uid, 
+        title: raw.title, 
+        venue: raw.venue
       }
-    })
+    });
+    console.log(isExisting);
     if (!isExisting) {
     */
-      //const matches = stringSimilarity.findBestMatch(raw.publisher || '', pubNames)
-      //if (matches.bestMatch.rating >= 0.7) {
-      //  raw.publishcationId = pubs[matches.bestMatchIndex].dataValues.id
-      //}
       console.log('title: ', raw.title);
       try {
         await Article.create(raw);

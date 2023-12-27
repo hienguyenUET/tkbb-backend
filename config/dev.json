@@ -21,20 +21,20 @@
     "tunghx": {
         "username": "tunghx",
         "role": "admin",
-        "hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
-        "plainPassword": "abc123"
+        "_hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
+        "_plainPassword": "abc123"
     },
-    "hoaison": {
-        "username": "hoaison",
+    "sonnh": {
+        "username": "sonnh",
         "role": "admin",
-        "hashPassword": "$2b$05$wZweRWUuic1InJEM.Dd7wui05oUwagxfxkYu7x4rW75GHmqbkc2Lq",
-        "plainPassword": "hoaison@2021"
+        "_hashPassword": "$2b$05$wZweRWUuic1InJEM.Dd7wui05oUwagxfxkYu7x4rW75GHmqbkc2Lq",
+        "_plainPassword": "hoaison@2021"
     },
-    "minh": {
-        "username": "minh",
+    "minhct": {
+        "username": "minhct",
         "role": "admin",
-        "hashPassword": "$2b$05$QJt7wOJhbzZsxX1KPlBPIO2YYx75YqRqRTUjXCqMHSjqt0dOMFi66",
-        "plainPassword": "minh524@2021"
+        "_hashPassword": "$2b$05$QJt7wOJhbzZsxX1KPlBPIO2YYx75YqRqRTUjXCqMHSjqt0dOMFi66",
+        "_plainPassword": "minh524@2021"
     },
     "giang": {
         "username": "giang",
@@ -94,6 +94,34 @@
         "role": "admin",
         "hashPassword": "$2b$05$tayTQCKRhdwCBpNS4JN87egMoDarnJCzqo6Ku52KpAJVwU5J0OKCW",
         "plainPassword": "khcn-htpt@2022"
+    },
+    "hieuvd": {
+        "username": "hieuvd",
+        "role": "admin"
+    },
+    "tungbt": {
+        "username": "tungbt",
+        "role": "admin"
+    },
+    "thangpm": {
+        "username": "thangpm",
+        "role": "admin"
+    },
+    "buidinhtu": {
+        "username": "buidinhtu",
+        "role": "admin"
+    },
+    "trienpm": {
+        "username": "trienpm",
+        "role": "admin"
+    },
+    "thangbn": {
+        "username": "thangbn",
+        "role": "admin"
+    },
+    "tchung": {
+        "username": "tchung",
+        "role": "admin"
     },
     "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4"
 }
