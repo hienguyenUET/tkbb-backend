@@ -9,7 +9,6 @@ const gsCrawlQueue = new Queue('crawlGS', {
         password
     }
 })
-
 setQueues([
     new BullAdapter(gsCrawlQueue, { readOnly: false })
 ])

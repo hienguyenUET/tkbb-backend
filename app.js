@@ -4,6 +4,7 @@ const cookieParser = require('cookie-parser')
 const express = require('express')
 const cors = require('cors')
 const config = require('config')
+console.log(config);
 const expressListEndpoints = require('express-list-endpoints')
 const bullBoard = require('bull-board')
 const path = require('path')
@@ -12,7 +13,7 @@ require('express-async-errors')
 const router = require('./router')
 const request = require('./middleware/request')
 
-const port = config.get('port') || 3000
+const port = config['port'] || 3000
 
 const app = express()
 

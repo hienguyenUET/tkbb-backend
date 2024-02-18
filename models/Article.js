@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     return sequelize.define('articles', {
-        status: {
+	status: {
             type: Sequelize.STRING,
             defaultValue: 'active'
         },
@@ -37,6 +37,10 @@ module.exports = (sequelize, Sequelize) => {
         },
         classified: {
             type: Sequelize.BOOLEAN
+        },
+        originalCategory: {
+            type: Sequelize.INTEGER,
+            defaultValue: 1
         }
     })
 }

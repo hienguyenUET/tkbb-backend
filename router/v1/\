@@ -3,7 +3,7 @@ const express = require('express')
 const { sequelize, Article, User, Category } = require('../../models/index');
 const { verifyToken } = require('../../middleware/auth')
 const gsCrawlQueue = require('../../job/queue')
-const ARTICLE_CLASSIFIED_TYPE = require('../../consts')
+
 const {QueryTypes} = require('sequelize');
 
 const router = express.Router()
@@ -36,6 +36,8 @@ router.post('/crawling/user/:id', verifyToken, async (req, res, next) => {
       user,
       yearWindow
     })
+
+console.log(gsCrawlQueue);
     return res.success()
 })
 
@@ -63,9 +65,6 @@ router.put('/:id', verifyToken, async (req, res, next) => {
     article.categoryId = articleData.categoryId || article.categoryId;
     article.uid = articleData.uid || articleData.uid;
     article.classified = (articleData.classified === undefined)?article.classified:articleData.classified;
-    article.classifiedType = (articleData.classifiedType === undefined || articleData.classifiedType === null) 
-                      ? ARTICLE_CLASSIFIED_TYPE.AUTO 
-                      : articleData.classifiedType;
     article.venue = (articleData.venue === undefined)?article.venue:articleData.venue;
     article.publicationDate = (articleData.publicationDate === undefined)?article.publicationDate:articleData.publicationDate;
     article.save();
@@ -94,6 +93,7 @@ router.get('/', verifyToken, async (req, res, next) => {
           model: Category
         }]
     });
+
     articles = articles.map(e => {
         return {
             ...e.dataValues,

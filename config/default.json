@@ -1,10 +1,10 @@
 {
-    "env": "dev",
+    "env": "production",
     "port": 8000,
     "database": {
         "name": "thongkebaibao",
-        "user": "admin",
-        "password": "abc123",
+        "user": "root",
+        "password": "admin11092002",
         "host": "127.0.0.1",
         "port": "3306"
     },
@@ -14,6 +14,7 @@
     },
     "admin": {
         "username": "admin",
+	"role":"admin",
         "hashPassword": "$2b$10$mZX.2ziitFED6Xhx/lCTxOMyTpSBtsSKR9wtiUhmFm1cB45K1NHuq",
         "plainPassword": "UqNEHMR9xBMrRPkY"
     },

@@ -3,8 +3,8 @@
     "port": 8000,
     "database": {
         "name": "thongkebaibao",
-        "user": "admin",
-        "password": "abc123",
+        "user": "root",
+        "password": "admin11092002",
         "host": "127.0.0.1",
         "port": "3306"
     },
@@ -23,6 +23,12 @@
         "role": "admin",
         "_hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
         "_plainPassword": "abc123"
+    },
+    "hiennc":{
+	 "username":"hiennc",
+	 "role":"admin",
+	 "hashPassword":"$2b$05$CllCqmOH6lIchdUInkG6EeC1gxUbYeJgJwItWiLSVcqqNzsHcSZi6",
+	 "plainPassword":"Moi11092002"
     },
     "sonnh": {
         "username": "sonnh",
@@ -123,5 +129,6 @@
         "username": "tchung",
         "role": "admin"
     },
-    "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4"
+    "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4",
+    "sessionTimeout": 60
 }

@@ -44,6 +44,25 @@ async function doProfileJob(jobData) {
     return new Error(err.stack)
   }
 }
+
+isExcludingNumber = (id) => {
+  if (id === 2 || id === 4 || id === 5 || id === 6 || id === 8) {
+    return true;
+  }
+  return false;
+}
+
+// TODO: delete this mock function
+randomCategoryId = () => {
+    return Math.floor(Math.random() * 13) + 1;
+}
+
+function mockCategoryId() {
+  const categoryId = randomCategoryId();
+  return isExcludingNumber(categoryId) ? mockCategoryId() : categoryId;
+}
+
+
 async function doCitationJob(jobData) {
   let gsUser, gsCitation;
   const {citationLink, user} = jobData;
@@ -71,6 +90,7 @@ async function doCitationJob(jobData) {
       citedCount: +articleData.total_citations || 0,
       citedUrl: articleData.citedUrl || '',
       venue: articleData.journal || articleData.conference || articleData.book || articleData.source || articleData.publisher || articleData.venue || 'Unknown',
+      originalCategory: mockCategoryId(),
       publisher: articleData.publisher,
       publicationDate: pubDate.toISOString().slice(0, 10)
     }
@@ -126,6 +146,7 @@ async function doCitationJob(jobData) {
 }
 gsCrawlQueue.process(1, async (job, done) => {
   let ret = null;
+console.log(job);	
   switch( job.data.type ) {
   case 0:
     ret = await doProfileJob(job.data);

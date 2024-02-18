@@ -1,4 +1,3 @@
-
 const jwt = require('jsonwebtoken')
 const secretKey = require('config').get('tokenSecretKey')
 

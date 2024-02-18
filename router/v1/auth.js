@@ -34,8 +34,6 @@ router.post('/login', async (req, res, next) => {
     const username = req.getParam('username')
     const password = req.getParam('password')
 
-    const A_YEAR = 24 * 60 * 60 * 30 * 365
-
     const admin = config.get(username)
 
     if (!admin || username !== admin.username) {
@@ -55,7 +53,7 @@ router.post('/login', async (req, res, next) => {
         }
     }
 
-    const token = jwt.sign({role: admin.role || 'user'}, config.get('tokenSecretKey'), {expiresIn: A_YEAR});
+    const token = jwt.sign({role: admin.role || 'user'}, config.get('tokenSecretKey'), {expiresIn: config.get("sessionTimeout")});
 
     res.success( { token, role: admin.role } )
 })
