@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     return sequelize.define('articles', {
-	status: {
+	    status: {
             type: Sequelize.STRING,
             defaultValue: 'active'
         },

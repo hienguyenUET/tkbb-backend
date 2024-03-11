@@ -7,6 +7,7 @@ const diachicongbo = require('./diachicongbo')
 const category = require('./category')
 const junk = require('./junk');
 const update = require('./update');
+const faculty = require('./faculty.js')
 
 const router = express.Router()
 
@@ -17,6 +18,7 @@ router.use('/diachicongbo', diachicongbo)
 router.use('/category', category)
 router.use('/update', update);
 router.use('/junk', junk);
+router.use('/faculty', faculty)
 
 
 module.exports = router

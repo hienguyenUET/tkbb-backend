@@ -24,11 +24,11 @@
         "_hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
         "_plainPassword": "abc123"
     },
-    "hiennc":{
-	 "username":"hiennc",
-	 "role":"admin",
-	 "hashPassword":"$2b$05$CllCqmOH6lIchdUInkG6EeC1gxUbYeJgJwItWiLSVcqqNzsHcSZi6",
-	 "plainPassword":"Moi11092002"
+    "hiennc": {
+        "username": "hiennc",
+        "role": "admin",
+        "hashPassword": "$2b$05$CllCqmOH6lIchdUInkG6EeC1gxUbYeJgJwItWiLSVcqqNzsHcSZi6",
+        "plainPassword": "Moi11092002"
     },
     "sonnh": {
         "username": "sonnh",
@@ -130,5 +130,5 @@
         "role": "admin"
     },
     "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4",
-    "sessionTimeout": 60
+    "sessionTimeout": 7776000
 }
