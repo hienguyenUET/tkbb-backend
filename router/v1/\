@@ -37,7 +37,6 @@ router.post('/crawling/user/:id', verifyToken, async (req, res, next) => {
       yearWindow
     })
 
-console.log(gsCrawlQueue);
     return res.success()
 })
 

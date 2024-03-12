@@ -24,7 +24,6 @@ router.post('/scopus', verifyToken, multer.single('scopus'), async (req, res) =>
   res.assert(filePath, 'File is missing')
   SCOPUS.destroy({truncate: true});
   convert(filePath, SCOPUS, columns, function(e) {
-    console.log('parse callback');
     if (!e) res.success();
     else res.status(502).send(e.message);
   });

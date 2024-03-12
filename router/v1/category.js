@@ -25,8 +25,6 @@ router.post('/', verifyToken, async (req, res) => {
 });
 
 router.put('/:id', verifyToken, async (req, res) => {
-  console.log('body',req.body);
-  console.log('params', req.params);
   let changeObj = req.body;
   let id = req.getParam('id');
   let category = await Category.findByPk(id);
@@ -34,7 +32,6 @@ router.put('/:id', verifyToken, async (req, res) => {
     category.name = changeObj.name || category.name;
     category.description = changeObj.description || category.description;
     category.researchHours = parseInt(changeObj.researchHours || category.researchHours);
-    console.log(category.name, category.description, category.researchHours);
     await category.save();
     res.success();
   }
