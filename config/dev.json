@@ -3,9 +3,9 @@
     "port": 8000,
     "database": {
         "name": "thongkebaibao",
-        "user": "root",
-        "password": "admin11092002",
-        "host": "127.0.0.1",
+        "user": "hien",
+        "password": "Password11092002@",
+        "host": "192.168.194.129",
         "port": "3306"
     },
     "redis": {

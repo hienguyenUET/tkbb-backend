@@ -66,7 +66,7 @@ router.post('/login', async (req, res, next) => {
             }
             const token = jwt.sign({ userRole: userRole || 'ANONYMOUS' }, config.get('tokenSecretKey'), { expiresIn: config.get("sessionTimeout") });
 
-            res.success({ token, role: userRole })
+            res.success({ token, accountCredential })
         }
     }).catch((error) => {
         console.log(error)
