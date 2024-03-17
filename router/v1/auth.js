@@ -51,7 +51,7 @@ router.post('/login', async (req, res, next) => {
         if (!accountCredential || !accountCredential.username) {
             return res.error("Invalid username or password");
         }
-        const isCorrectPassword = bcrypt.compareSync(password, accountCredential.password)
+        const isCorrectPassword = bcrypt.compareSync(password, accountCredential.hashed_password)
         if (!isCorrectPassword) {
             return res.error("Invalid username or password");
         } else {

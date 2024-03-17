@@ -13,7 +13,7 @@
         "port": 6379
     },
     "admin": {
-        "username": "admin",
+        "username": "adminen",
         "role": "admin",
         "hashPassword": "$2b$10$mZX.2ziitFED6Xhx/lCTxOMyTpSBtsSKR9wtiUhmFm1cB45K1NHuq",
         "plainPassword": "UqNEHMR9xBMrRPkY"

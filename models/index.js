@@ -1,4 +1,3 @@
-
 const Sequelize = require('sequelize')
 const config = require('config')
 
@@ -9,23 +8,23 @@ const sequelize = new Sequelize(
     dbInfo.name,
     dbInfo.user,
     dbInfo.password, {
-    host: dbInfo.host,
-    port: dbInfo.port,
-    dialect: 'mysql',
-    operatorsAliases: false,
-    pool: {
-        max: 5,
-        min: 0,
-        acquire: 1000000,
-        idle: 200000,
-    },
-    define: {
-        charset: 'utf8mb4',
-        collate: 'utf8mb4_unicode_ci',
-        freezeTableName: true
-    },
-    logging: false
-}
+        host: dbInfo.host,
+        port: dbInfo.port,
+        dialect: 'mysql',
+        operatorsAliases: false,
+        pool: {
+            max: 5,
+            min: 0,
+            acquire: 1000000,
+            idle: 200000,
+        },
+        define: {
+            charset: 'utf8mb4',
+            collate: 'utf8mb4_unicode_ci',
+            freezeTableName: true
+        },
+        logging: false
+    }
 )
 
 db.sequelize = sequelize
@@ -66,6 +65,18 @@ db.Role.hasMany(db.Account, {
 db.Account.belongsTo(db.Role, {
     foreignKey: 'role_id',
     sourceKey: 'id'
+})
+
+db.Account.belongsTo(db.Faculty, {
+    foreignKey: 'faculty_id',
+    as: 'facultyInfo',
+    sourceKey: "id"
+})
+
+db.Faculty.hasMany(db.Account, {
+    foreignKey: 'faculty_id',
+    as: 'facultyInfo',
+    sourceKey: "id"
 })
 
 db.User.hasMany(db.Article, {
