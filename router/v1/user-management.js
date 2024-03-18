@@ -18,4 +18,9 @@ router.get(`/search`, verifyToken, async (req, res, next) => {
     return res.success(accountList);
 })
 
+router.get('/role/search', verifyToken, async (req, res, next) => {
+    const roleList = await Role.findAll();
+    return res.success(roleList);
+})
+
 module.exports = router
