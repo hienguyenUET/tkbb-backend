@@ -101,4 +101,18 @@ router.delete('/delete-account/:accountId', verifyToken, async (req, res) => {
     }
 });
 
+router.delete('/delete-multiple-account/:accountIds', async (req, res) => {
+    const accountIds = req.params.accountIds.split(",");
+    try {
+        await Account.destroy({
+            where: {
+                id: accountIds
+            }
+        })
+        return res.success("Delete successfully")
+    } catch (e) {
+        res.error("Delete failed")
+    }
+});
+
 module.exports = router
