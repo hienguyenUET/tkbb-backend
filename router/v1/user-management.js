@@ -6,6 +6,9 @@ const bcrypt = require('bcrypt')
 const {Sequelize} = require("sequelize");
 const config = require('config')
 
+
+const ROOT_FACULTY_ID = 0;
+
 router.get(`/search`, verifyToken, async (req, res, next) => {
     const accountList = await Account.findAll(
         {
@@ -23,6 +26,9 @@ router.get(`/search`, verifyToken, async (req, res, next) => {
 
 router.post('/new-account', verifyToken, async (req, res) => {
     const newAccount = req.body;
+    if (isAdminOrContentAdminAccount(newAccount)) {
+        newAccount.faculty_id = ROOT_FACULTY_ID;
+    }
     newAccount.password = config.get("default-password") ? config.get("default-password") : "dhcn@2024";
     newAccount.hashed_password = await bcrypt.hash(newAccount.password, 10).then(newHashedPassword => {
         return newHashedPassword;
@@ -38,6 +44,13 @@ router.post('/new-account', verifyToken, async (req, res) => {
     }
 });
 
+const isAdminOrContentAdminAccount = (account) => {
+    if (!account || !account.role_id) {
+        return false;
+    }
+    return account.role_id === 1 || account.role_id === 2;
+}
+
 router.get('/role/search', verifyToken, async (req, res, next) => {
     const roleList = await Role.findAll();
     return res.success(roleList);
@@ -45,6 +58,9 @@ router.get('/role/search', verifyToken, async (req, res, next) => {
 
 router.put('/update-account', verifyToken, async (req, res) => {
     const account = req.body;
+    if (isAdminOrContentAdminAccount(account)) {
+        account.faculty_id = ROOT_FACULTY_ID;
+    }
     try {
         await Account.update(account, {
             where: {
