@@ -1,134 +1,135 @@
 {
-    "env": "dev",
-    "port": 8000,
-    "database": {
-        "name": "thongkebaibao",
-        "user": "hien",
-        "password": "Password11092002@",
-        "host": "192.168.194.129",
-        "port": "3306"
-    },
-    "redis": {
-        "host": "127.0.0.1",
-        "port": 6379
-    },
-    "admin": {
-        "username": "adminen",
-        "role": "admin",
-        "hashPassword": "$2b$10$mZX.2ziitFED6Xhx/lCTxOMyTpSBtsSKR9wtiUhmFm1cB45K1NHuq",
-        "plainPassword": "UqNEHMR9xBMrRPkY"
-    },
-    "tunghx": {
-        "username": "tunghx",
-        "role": "admin",
-        "_hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
-        "_plainPassword": "abc123"
-    },
-    "hiennc": {
-        "username": "hiennc",
-        "role": "admin",
-        "hashPassword": "$2b$05$CllCqmOH6lIchdUInkG6EeC1gxUbYeJgJwItWiLSVcqqNzsHcSZi6",
-        "plainPassword": "Moi11092002"
-    },
-    "sonnh": {
-        "username": "sonnh",
-        "role": "admin",
-        "_hashPassword": "$2b$05$wZweRWUuic1InJEM.Dd7wui05oUwagxfxkYu7x4rW75GHmqbkc2Lq",
-        "_plainPassword": "hoaison@2021"
-    },
-    "minhct": {
-        "username": "minhct",
-        "role": "admin",
-        "_hashPassword": "$2b$05$QJt7wOJhbzZsxX1KPlBPIO2YYx75YqRqRTUjXCqMHSjqt0dOMFi66",
-        "_plainPassword": "minh524@2021"
-    },
-    "giang": {
-        "username": "giang",
-        "role": "admin",
-        "hashPassword": "$2b$05$ge1zsfI8f51m6P3qH.S3o.T9BJccVQ0nR.gh4odiBPsDuse9x7nyW",
-        "plainPassword": "giang873@2021"
-    },
-    "huyen": {
-        "username": "huyen",
-        "role": "admin",
-        "hashPassword": "$2b$05$4Vj8.N3XLl.nNaNRldEhi.gyWT5EV0T9hym.iKALSip0I82FQQVbO",
-        "plainPassword": "huyen153@2021"
-    },
-    "nhung": {
-        "username": "nhung",
-        "role": "admin",
-        "hashPassword": "$2b$05$PE6lgyir458wguGA1AVCLOdvvvlzKWLEo0u.MNjFptE7H9OCecNB6",
-        "plainPassword": "nhung998@2021"
-    },
-    "trinhcd": {
-        "username": "trinhcd",
-        "hashPassword": "$2b$05$bxiO6f787sP0EHOJMgtqBewE2ymDBi8JTVV5e7Gw0hgz4aR6LBYJS",
-        "plainPassword": "tkbb2021"
-    },
-    "cntt": {
-        "username": "cntt",
-        "hashPassword": "$2b$05$GEQATOxEMO4zSekU4cUlTuKYm1szhEECop4LI5IqGUx0P8YblJNBC",
-        "plainPassword": "cn77#2021"
-    },
-    "dtvt": {
-        "username": "dtvt",
-        "hashPassword": "$2b$05$0XdYrBUTei0Z6huMbZCTr.rK/Gp/acA4c0uPscweD8yBMrN.DrvxC",
-        "plainPassword": "d7v7$2021"
-    },
-    "chkt": {
-        "username": "chkt",
-        "hashPassword": "$2b$05$SzX08pm2XjhGi2BXHjbpRe5vUxcMrzAnIdqYMm9ltB9u4p/jIX0bK",
-        "plainPassword": "chk7!2021"
-    },
-    "vlkt": {
-        "username": "vlkt",
-        "hashPassword": "$2b$05$qnaQDfjQdfebJW2KAEeFpu/bMxi7TClm7prUZRibGRsE8PFvcfR6m",
-        "plainPassword": "v1k7%2021"
-    },
-    "cnnn": {
-        "username": "cnnn",
-        "hashPassword": "$2b$05$S3Wx57pP.4F4PJR0OLoKous5JzrAoeqKN5fpav/1b5OY9VgF/y8qe",
-        "plainPassword": "cn3^2021"
-    },
-    "hkvt": {
-        "username": "hkvt",
-        "hashPassword": "$2b$05$3Yw2jbMsMwJ4qJCndRTOr.AxwmdALpsY4HqrW2ZhIQRYrPHK9aiqa",
-        "plainPassword": "hkv7@2021"
-    },
-    "ngocan": {
-        "username": "ngocan",
-        "role": "admin",
-        "hashPassword": "$2b$05$tayTQCKRhdwCBpNS4JN87egMoDarnJCzqo6Ku52KpAJVwU5J0OKCW",
-        "plainPassword": "khcn-htpt@2022"
-    },
-    "hieuvd": {
-        "username": "hieuvd",
-        "role": "admin"
-    },
-    "tungbt": {
-        "username": "tungbt",
-        "role": "admin"
-    },
-    "thangpm": {
-        "username": "thangpm",
-        "role": "admin"
-    },
-    "buidinhtu": {
-        "username": "buidinhtu",
-        "role": "admin"
-    },
-    "trienpm": {
-        "username": "trienpm",
-        "role": "admin"
-    },
-    "thangbn": {
-        "username": "thangbn",
-        "role": "admin"
-    },
-    "tchung": {
-        "username": "tchung",
-        "role": "admin"
-    },
-    "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4",
-    "sessionTimeout": 7776000
+  "env": "dev",
+  "port": 8000,
+  "database": {
+    "name": "thongkebaibao",
+    "user": "hien",
+    "password": "Password11092002@",
+    "host": "192.168.194.129",
+    "port": "3306"
+  },
+  "default-password": "dhcn@2024",
+  "redis": {
+    "host": "127.0.0.1",
+    "port": 6379
+  },
+  "admin": {
+    "username": "adminen",
+    "role": "admin",
+    "hashPassword": "$2b$10$mZX.2ziitFED6Xhx/lCTxOMyTpSBtsSKR9wtiUhmFm1cB45K1NHuq",
+    "plainPassword": "UqNEHMR9xBMrRPkY"
+  },
+  "tunghx": {
+    "username": "tunghx",
+    "role": "admin",
+    "_hashPassword": "$2b$05$QGdPPpkwqIPd1HSYQVUIwuuZQ4OuVUaDLLw44T/rtva9iH9DBiODi",
+    "_plainPassword": "abc123"
+  },
+  "hiennc": {
+    "username": "hiennc",
+    "role": "admin",
+    "hashPassword": "$2b$05$CllCqmOH6lIchdUInkG6EeC1gxUbYeJgJwItWiLSVcqqNzsHcSZi6",
+    "plainPassword": "Moi11092002"
+  },
+  "sonnh": {
+    "username": "sonnh",
+    "role": "admin",
+    "_hashPassword": "$2b$05$wZweRWUuic1InJEM.Dd7wui05oUwagxfxkYu7x4rW75GHmqbkc2Lq",
+    "_plainPassword": "hoaison@2021"
+  },
+  "minhct": {
+    "username": "minhct",
+    "role": "admin",
+    "_hashPassword": "$2b$05$QJt7wOJhbzZsxX1KPlBPIO2YYx75YqRqRTUjXCqMHSjqt0dOMFi66",
+    "_plainPassword": "minh524@2021"
+  },
+  "giang": {
+    "username": "giang",
+    "role": "admin",
+    "hashPassword": "$2b$05$ge1zsfI8f51m6P3qH.S3o.T9BJccVQ0nR.gh4odiBPsDuse9x7nyW",
+    "plainPassword": "giang873@2021"
+  },
+  "huyen": {
+    "username": "huyen",
+    "role": "admin",
+    "hashPassword": "$2b$05$4Vj8.N3XLl.nNaNRldEhi.gyWT5EV0T9hym.iKALSip0I82FQQVbO",
+    "plainPassword": "huyen153@2021"
+  },
+  "nhung": {
+    "username": "nhung",
+    "role": "admin",
+    "hashPassword": "$2b$05$PE6lgyir458wguGA1AVCLOdvvvlzKWLEo0u.MNjFptE7H9OCecNB6",
+    "plainPassword": "nhung998@2021"
+  },
+  "trinhcd": {
+    "username": "trinhcd",
+    "hashPassword": "$2b$05$bxiO6f787sP0EHOJMgtqBewE2ymDBi8JTVV5e7Gw0hgz4aR6LBYJS",
+    "plainPassword": "tkbb2021"
+  },
+  "cntt": {
+    "username": "cntt",
+    "hashPassword": "$2b$05$GEQATOxEMO4zSekU4cUlTuKYm1szhEECop4LI5IqGUx0P8YblJNBC",
+    "plainPassword": "cn77#2021"
+  },
+  "dtvt": {
+    "username": "dtvt",
+    "hashPassword": "$2b$05$0XdYrBUTei0Z6huMbZCTr.rK/Gp/acA4c0uPscweD8yBMrN.DrvxC",
+    "plainPassword": "d7v7$2021"
+  },
+  "chkt": {
+    "username": "chkt",
+    "hashPassword": "$2b$05$SzX08pm2XjhGi2BXHjbpRe5vUxcMrzAnIdqYMm9ltB9u4p/jIX0bK",
+    "plainPassword": "chk7!2021"
+  },
+  "vlkt": {
+    "username": "vlkt",
+    "hashPassword": "$2b$05$qnaQDfjQdfebJW2KAEeFpu/bMxi7TClm7prUZRibGRsE8PFvcfR6m",
+    "plainPassword": "v1k7%2021"
+  },
+  "cnnn": {
+    "username": "cnnn",
+    "hashPassword": "$2b$05$S3Wx57pP.4F4PJR0OLoKous5JzrAoeqKN5fpav/1b5OY9VgF/y8qe",
+    "plainPassword": "cn3^2021"
+  },
+  "hkvt": {
+    "username": "hkvt",
+    "hashPassword": "$2b$05$3Yw2jbMsMwJ4qJCndRTOr.AxwmdALpsY4HqrW2ZhIQRYrPHK9aiqa",
+    "plainPassword": "hkv7@2021"
+  },
+  "ngocan": {
+    "username": "ngocan",
+    "role": "admin",
+    "hashPassword": "$2b$05$tayTQCKRhdwCBpNS4JN87egMoDarnJCzqo6Ku52KpAJVwU5J0OKCW",
+    "plainPassword": "khcn-htpt@2022"
+  },
+  "hieuvd": {
+    "username": "hieuvd",
+    "role": "admin"
+  },
+  "tungbt": {
+    "username": "tungbt",
+    "role": "admin"
+  },
+  "thangpm": {
+    "username": "thangpm",
+    "role": "admin"
+  },
+  "buidinhtu": {
+    "username": "buidinhtu",
+    "role": "admin"
+  },
+  "trienpm": {
+    "username": "trienpm",
+    "role": "admin"
+  },
+  "thangbn": {
+    "username": "thangbn",
+    "role": "admin"
+  },
+  "tchung": {
+    "username": "tchung",
+    "role": "admin"
+  },
+  "tokenSecretKey": "%G*gKWcb5uLY-Jjjj-4",
+  "sessionTimeout": 7776000
 }

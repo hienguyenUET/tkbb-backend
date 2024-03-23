@@ -23,7 +23,6 @@ module.exports = (sequelize, Sequelize) => {
 			type: Sequelize.STRING,
 			allowNull: false
 		},
-
 		hashed_password: {
 			field: "hashed_password",
 			type: Sequelize.STRING,
