@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken')
 const router = express.Router()
 
 const { authenticate } = require('ldap-authentication');
-const { Account, Role } = require('../../models')
+const { Account, Role, Faculty } = require('../../models')
 const opts = {
     ldapOpts: {
         url: 'ldap://10.10.0.220:389',
@@ -45,6 +45,9 @@ router.post('/login', async (req, res, next) => {
         },
         include: [{
             model: Role
+        }, {
+            model: Faculty,
+            as: 'facultyInfo'
         }]
     }).then((account) => {
         const accountCredential = account.dataValues;
@@ -65,8 +68,14 @@ router.post('/login', async (req, res, next) => {
                 return res.error('Failed to authenticate');
             }
             const token = jwt.sign({ userRole: userRole || 'ANONYMOUS' }, config.get('tokenSecretKey'), { expiresIn: config.get("sessionTimeout") });
-
-            res.success({ token, accountCredential })
+            const userInfo = {
+                id: accountCredential.id,
+                username: accountCredential.username,
+                name: accountCredential.name,
+                role: userRole,
+                faculty: accountCredential.facultyInfo
+            }
+            res.success({ token, userInfo })
         }
     }).catch((error) => {
         console.log(error)
