@@ -8,6 +8,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING(512),
             allowNull: false,
         },
+        isFirstAuthor: {
+            field: 'is_first_author',
+            type: Sequelize.BOOLEAN,
+        },
+        isCorrespondingAuthor: {
+            field: 'is_corresponding_author',
+            type: Sequelize.BOOLEAN,
+        },
         year: {
             type: Sequelize.STRING,
         },
@@ -39,6 +47,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.BOOLEAN
         },
         originalCategory: {
+            field: 'original_category',
             type: Sequelize.INTEGER,
             defaultValue: 1
         }

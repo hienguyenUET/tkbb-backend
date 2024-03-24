@@ -1,5 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
 	return sequelize.define("accounts", {
+		id: {
+			type: Sequelize.INTEGER,
+			primaryKey: true,
+			autoIncrement: true,
+		},
 		username: {
 			field: "username",
 			type: Sequelize.STRING,

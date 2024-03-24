@@ -3,9 +3,9 @@
   "port": 8000,
   "database": {
     "name": "thongkebaibao",
-    "user": "hien",
-    "password": "Password11092002@",
-    "host": "192.168.194.129",
+    "user": "root",
+    "password": "11092002",
+    "host": "localhost",
     "port": "3306"
   },
   "default-password": "dhcn@2024",

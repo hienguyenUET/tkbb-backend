@@ -78,7 +78,6 @@ router.post('/login', async (req, res, next) => {
             res.success({ token, userInfo })
         }
     }).catch((error) => {
-        console.log(error)
         return res.error("Error logging in")
     })
     // const admin = config.get(username)
