@@ -5,8 +5,8 @@ const jwt = require('jsonwebtoken')
 const excelToJson = require('convert-excel-to-json')
 
 const multer = require('../../middleware/multer')
-const { verifyToken } = require('../../middleware/auth')
-const { User, Faculty } = require('../../models')
+const {verifyToken} = require('../../middleware/auth')
+const {User, Faculty} = require('../../models')
 const Sequelize = require('sequelize');
 
 const router = express.Router()
@@ -49,37 +49,52 @@ router.post('/', verifyToken, async (req, res, next) => {
     const fullName = req.getParam('fullName')
     const faculty = req.getParam('faculty')
     const gsUrl = req.getParam('gsUrl')
+    const englishName = req.getParam('englishName')
 
     const raw = {
         fullName,
-        faculty,
+        englishName,
         gsUrl,
     }
+    raw["faculty_id"] = faculty;
+    raw["accounts_id"] = -1;
 
-    await User.create(raw)
-
-    res.success()
+    try {
+        await User.create(raw);
+        return res.success("Add successfully")
+    } catch (e) {
+        return res.error("Add failed");
+    }
 })
 
 router.get('/', verifyToken, async (req, res, next) => {
-    const user = await User.findAll({
-        include: [{
-            model: Faculty,
-            as: 'facultyInfo',
-        }],
-    })
-
-    res.success(user)
+    try {
+        const user = await User.findAll({
+            include: [{
+                model: Faculty,
+                as: 'facultyInfo',
+            }],
+        })
+        return res.success(user)
+    } catch (e) {
+        console.log(e)
+        return res.error("Get user info failed");
+    }
 })
 
 router.delete('/:id', verifyToken, async (req, res, next) => {
-    const id = req.getParam('id')
-
-    const user = await User.findByPk(id)
-
-    await user.destroy()
-
-    res.success()
+    try {
+        const id = req.getParam('id')
+        await User.destroy({
+            where: {
+                id: id
+            }
+        })
+        return res.success("Delete successfully");
+    } catch (e) {
+        console.log(e)
+        return res.error("Delete failed");
+    }
 })
 
 router.put('/:id', verifyToken, async (req, res) => {

@@ -52,8 +52,12 @@ const isAdminOrContentAdminAccount = (account) => {
 }
 
 router.get('/role/search', verifyToken, async (req, res, next) => {
-    const roleList = await Role.findAll();
-    return res.success(roleList);
+    try {
+        const roleList = await Role.findAll();
+        return res.success(roleList);
+    } catch (error) {
+        return res.error("Search failed");
+    }
 })
 
 router.put('/update-account', verifyToken, async (req, res) => {
