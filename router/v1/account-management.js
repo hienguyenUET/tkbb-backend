@@ -1,7 +1,7 @@
 const express = require("express");
 const {verifyToken} = require("../../middleware/auth");
 const router = express.Router()
-const {Account, Role, Faculty} = require('../../models')
+const {Account, Role, Faculty, User} = require('../../models')
 const bcrypt = require('bcrypt')
 const {Sequelize} = require("sequelize");
 const config = require('config')
@@ -17,7 +17,10 @@ router.get(`/search`, verifyToken, async (req, res, next) => {
                 as: 'facultyInfo'
             }, {
                 model: Role
-            }]
+            }],
+            attributes: {
+                exclude: ["password", "hashed_password"]
+            }
         }
     );
 
@@ -34,9 +37,18 @@ router.post('/new-account', verifyToken, async (req, res) => {
         return newHashedPassword;
     });
     try {
-        await Account.create(newAccount);
+        await Account.create(newAccount).then(insertedAccount => {
+            User.update({
+                account_id: insertedAccount.id
+            }, {
+                where: {
+                    id: newAccount.user_id
+                }
+            })
+        });
         return res.success("Add successfully");
     } catch (error) {
+        console.log(error)
         if (error instanceof Sequelize.UniqueConstraintError) {
             return res.error("Username already exists")
         }

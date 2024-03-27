@@ -17,12 +17,12 @@ module.exports = (sequelize, Sequelize) => {
 			unique: false,
 			allowNull: false
 		},
-		email: {
-			field: "email",
-			type: Sequelize.STRING,
-			unique: false,
-			allowNull: false
-		},
+		// email: {
+		// 	field: "email",
+		// 	type: Sequelize.STRING,
+		// 	unique: false,
+		// 	allowNull: false
+		// },
 		password: {
 			field: "password",
 			type: Sequelize.STRING,

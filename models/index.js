@@ -73,6 +73,16 @@ db.Account.belongsTo(db.Faculty, {
     sourceKey: "id"
 })
 
+db.User.belongsTo(db.Account, {
+    foreignKey: 'account_id',
+
+});
+
+db.Account.hasOne(db.User, {
+    foreignKey: 'account_id',
+});
+
+
 db.Faculty.hasMany(db.Account, {
     foreignKey: 'faculty_id',
     as: 'facultyInfo',
@@ -109,18 +119,6 @@ db.Category.hasMany(db.Article, {
     foreignKey: 'categoryId',
     sourceKey: 'id'
 });
-/*
-db.Article.belongsTo(db.DiaChiCongBo, {
-    foreignKey: 'publishcationId',
-    sourceKey: 'id'
-})
-*/
-/*
-db.DiaChiCongBo.hasMany(db.Article, {
-    foreignKey: 'publishcationId',
-    sourceKey: 'id'
-})
-*/
 
 db.DiaChiCongBo.belongsTo(db.Category, {
     foreignKey: 'categoryId',

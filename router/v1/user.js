@@ -108,5 +108,24 @@ router.put('/:id', verifyToken, async (req, res) => {
     res.success();
 });
 
+router.get('/search/add-account', verifyToken, async (req, res) => {
+    try {
+        const users = await User.findAll({
+            where: {
+                account_id: null
+            },
+            order: ["fullName"],
+            include: [{
+                model: Faculty,
+                as: 'facultyInfo',
+            }],
+        })
+        return res.success(users)
+    } catch (error) {
+        console.log(error);
+        return res.error("Get user info failed");
+    }
+})
+
 
 module.exports = router
