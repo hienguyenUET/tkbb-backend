@@ -12,37 +12,63 @@ const Sequelize = require('sequelize');
 const router = express.Router()
 
 router.post('/importing', verifyToken, multer.single('users'), async (req, res, next) => {
-    const filePath = req.file?.path
-    res.assert(filePath, 'File is missing')
+    try {
+        const filePath = req.file?.path
+        res.assert(filePath, 'File is missing')
+        const users = excelToJson({
+            sourceFile: filePath,
+            header: {
+                rows: 2
+            },
+            columnToKey: {
+                A: 'STT',
+                B: 'Họ và tên',
+                C: 'Đơn vị',
+                D: 'Tài khoản Google Scholar'
+            }
+        })
+        await Faculty.findAll().then(faculties => {
+            for (const u of users[Object.keys(users)[0]]) {
+                const raw = {
+                    fullName: u['Họ và tên'],
+                    faculty: u['Đơn vị'],
+                    gsUrl: u['Tài khoản Google Scholar'],
+                }
 
-    const users = excelToJson({
-        sourceFile: filePath,
-        header: {
-            rows: 2
-        },
-        columnToKey: {
-            A: 'STT',
-            B: 'Họ và tên',
-            C: 'Đơn vị',
-            D: 'Tài khoản Google Scholar'
-        }
-    })
+                if (!raw.fullName || !raw.gsUrl) {
+                    continue
+                }
 
-    for (const u of users[Object.keys(users)[0]]) {
-        const raw = {
-            fullName: u['Họ và tên'],
-            faculty: u['Đơn vị'],
-            gsUrl: u['Tài khoản Google Scholar'],
-        }
+                const faculty = faculties.find(f => f.dataValues.facultyName === raw.faculty)
+                if (faculty === undefined || faculty === null) {
+                    continue;
+                }
+                if (faculty) {
+                    raw.faculty_id = faculty.id
+                }
 
-        if (!raw.fullName || !raw.gsUrl) {
-            continue
-        }
-
-        await User.create(raw)
+                User.create(raw)
+            }
+            return res.success("Upload successfully")
+        })
+    } catch (error) {
+        console.log(error);
+        return res.error("Upload failed")
     }
 
-    res.success()
+    // for (const u of users[Object.keys(users)[0]]) {
+    //     const raw = {
+    //         fullName: u['Họ và tên'],
+    //         faculty: u['Đơn vị'],
+    //         gsUrl: u['Tài khoản Google Scholar'],
+    //     }
+    //
+    //     if (!raw.fullName || !raw.gsUrl) {
+    //         continue
+    //     }
+    //
+    //     await User.create(raw)
+    // }
 })
 
 router.post('/', verifyToken, async (req, res, next) => {
@@ -67,9 +93,17 @@ router.post('/', verifyToken, async (req, res, next) => {
     }
 })
 
+
 router.get('/', verifyToken, async (req, res, next) => {
     try {
+        let facultyId = req.query.facultyId;
+        let whereClause = {};
+        if (facultyId !== undefined && facultyId !== null && facultyId !== '0') {
+            whereClause.faculty_id = facultyId;
+        }
         const user = await User.findAll({
+            where: whereClause,
+            order: ['fullName', 'id'],
             include: [{
                 model: Faculty,
                 as: 'facultyInfo',

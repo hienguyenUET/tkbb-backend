@@ -116,7 +116,7 @@ router.post('/query', verifyToken, async (req, res) => {
     let whereStartDate = "";
     let whereEndDate = "";
     if (criteria.faculty) {
-        whereFaculty = "AND users.faculty = :faculty"
+        whereFaculty = "AND users.faculty_id = :faculty"
     }
     if (criteria.category) {
         whereCategory = "AND category.id = :category"
