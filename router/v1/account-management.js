@@ -129,6 +129,7 @@ router.delete('/delete-account/:accountId', verifyToken, async (req, res) => {
         })
         return res.success("Delete successfully")
     } catch (e) {
+        console.log(e)
         res.error("Delete failed")
     }
 });

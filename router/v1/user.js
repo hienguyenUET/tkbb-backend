@@ -3,10 +3,10 @@ const bcrypt = require('bcrypt')
 const config = require('config')
 const jwt = require('jsonwebtoken')
 const excelToJson = require('convert-excel-to-json')
-
+const { Op } = require('sequelize');
 const multer = require('../../middleware/multer')
-const {verifyToken} = require('../../middleware/auth')
-const {User, Faculty} = require('../../models')
+const { verifyToken } = require('../../middleware/auth')
+const { User, Faculty } = require('../../models')
 const Sequelize = require('sequelize');
 
 const router = express.Router()
@@ -144,10 +144,23 @@ router.put('/:id', verifyToken, async (req, res) => {
 
 router.get('/search/add-account', verifyToken, async (req, res) => {
     try {
-        const users = await User.findAll({
-            where: {
+        const action = req.getParam("action")
+        let whereCondition = {}
+        if (action === "edit") {
+            const authorEditId = req.getParam("id")
+            whereCondition = {
+                account_id: authorEditId
+            }
+        } else if (action === "add") {
+            whereCondition = {
                 account_id: null
-            },
+            }
+        } else {
+            return res.error("Get user info failed");
+        }
+
+        const users = await User.findAll({
+            where: whereCondition,
             order: ["fullName"],
             include: [{
                 model: Faculty,
@@ -156,7 +169,6 @@ router.get('/search/add-account', verifyToken, async (req, res) => {
         })
         return res.success(users)
     } catch (error) {
-        console.log(error);
         return res.error("Get user info failed");
     }
 })

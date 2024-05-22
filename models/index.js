@@ -74,12 +74,18 @@ db.Account.belongsTo(db.Faculty, {
 })
 
 db.User.belongsTo(db.Account, {
-    foreignKey: 'account_id',
-
+    foreignKey: {
+        name: 'account_id',
+        allowNull: true
+    },
 });
 
 db.Account.hasOne(db.User, {
-    foreignKey: 'account_id',
+    foreignKey: {
+        name: 'account_id',
+        allowNull: true
+    },
+    onDelete: 'CASCADE'
 });
 
 
